@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import './App.css';
+import Cart from './component/cart/Cart';
+import List from './component/list/List';
 import Login from './component/login/Login';
-
+import Offer from './component/Offer/Offer';
+import logo from './images/logo.webp'
 function App() {
 
   const [userData, setUserData] = useState(localStorage.getItem('user') || null)
@@ -13,20 +16,27 @@ function App() {
     setUserData(data);
   }
 
+  const handleLogout =() => {
+    localStorage.removeItem('user')
+    setUserData('')
+  }
+
   return (
     <div className="App">
       {userData ?<><header>
-        {/* <img src={} alt='img' /> */}
+        <img src={logo} alt='img' />
         <div className='right-header'>
+          <Offer />
+          <Cart />
         <label className='switch'>
           <input type="checkbox"  />
           <span className='slider round'> </span>
         </label>
-        <button href ="" className='logout-linkButton' >Logout</button>
+        <button href ="" className='logout-linkButton' onClick={handleLogout} >Logout</button>
         </div>
       </header>
       <div className='body-container'>  
-        {/* <List /> */}
+        <List />
       </div>
       </>
        : <Login changeUserData={changeUserData} />}
