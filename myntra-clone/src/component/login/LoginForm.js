@@ -1,19 +1,12 @@
 import React,{useState} from "react";
+import './login.css'
 
-const LoginForm = () => {
+const LoginForm = (props) => {
 
     // const [name, setName] = useState("");
     // const [email, setEmail] = useState("")
     // const [pass, setPass] = useState("")
     // const [npass, setNpass] = useState("")
-
-    const [value, setValue] = useState({
-        name: "",
-        email: "",
-        pass: "",
-        npass: "",
-        state: ""
-    });
 
     // DRY
     // const changeName = (e) => {
@@ -31,6 +24,17 @@ const LoginForm = () => {
     // const changeNpass = (e) => {
     //     setNpass(e.target.value);
     // }
+    
+    const [value, setValue] = useState({
+        name: "",
+        email: "",
+        pass: "",
+        npass: "",
+        state: ""
+    });
+
+    const [err, setErr] = useState(false);
+    const [errText, setErrText] = useState("");
 
     const handleInputChange = (e) => {
         // console.log(e.target.name)
@@ -40,6 +44,28 @@ const LoginForm = () => {
             ...value,
             [e.target.name] : e.target.value
         })
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if(!value.name || !value.email || !value.pass || !value.npass) {
+            // alert("Please fill all the fields")
+            setErr(true);
+            setErrText("Please enter all the fields")
+        } else if(value.name.length < 2) {
+            setErr(true);
+            setErrText("Name is too short!")
+        } else if(value.pass !== value.npass) {
+            setErr(true);
+            setErrText("password do not match")
+        } else {
+            setErr(false);
+            localStorage.setItem('user',JSON.stringify(value))
+            props.changeUserData(value)
+            // console.log( "loginform" + value)
+        }
+        
     }
 
     return(
@@ -69,6 +95,9 @@ const LoginForm = () => {
                 <option value="Punjab">Punjab</option>
             </select>
             </div>
+            {err === true ? <div className="err"> {errText}</div> : null}
+            <button type="submit" value="Submit" className="button button_wide" onClick={handleSubmit}>Create Your Account</button>
+            
         </form>
     )
 }
